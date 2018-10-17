@@ -5,7 +5,7 @@ Param(
     #Solr,Lucene,Azure
     ,[Parameter(Mandatory = $True)] [string] $searchType
     #Todo: Need to add mode Type check, fix
-    ,[Parameter(Mandatory = $true )][string]$runMode
+    ,[Parameter(Mandatory = $False )][string]$runMode = "fix"
     , [Parameter(Mandatory = $False)] [string] $CsvSettingsFilePath = ".\settings\ConfigurationCsv.Settings.xml"
     , [Parameter(Mandatory = $False)] [string] $ApplicationFolderPath = "C:\inetpub\wwwroot\Lowes"
 )
@@ -17,8 +17,14 @@ Write-Host "Note that the most common error occurs when a 'Config Type' and 'Con
 
 Read-Host "Press [ENTER] to execute the tool"
 
+#Log file parameters
 
-Import-Module -Name ".\tools.psm1"
+$logfile = ".\logs\$(Get-Date -Format yyyyMMdd_HHmm).log"
+Function LogWrite {
+    Param ( [string]$logstring ) Add-content $logfile -value $logstring
+    
+}
+
 Write-Host "Executing tests..."
 #Check setting files 
 if (-not (Test-Path -Path $CsvSettingsFilePath -PathType Leaf)) {
